@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6L-Appscript-test Web App</title>
+  <!-- 載入 css/style.css.html (GAS 雲端由 include() 解析，本地端由 dev-server.js 自動嵌入) -->
+  <?!= include('css/style.css'); ?>
+</head>
+<body>
+  <header>
+    <div class="brand">🚀 6L-Appscript-test Web App</div>
+    <span id="env-badge" class="badge badge-local">檢測環境中...</span>
+  </header>
+  <main>
+    <section class="hero-card">
+      <h1>歡迎使用 6L-Appscript-test 專案首頁</h1>
+      <p>此專案支援於本地端（Port 3030）與 Google Apps Script 雲端環境無縫運行。</p>
+      <div class="grid">
+        <div class="info-card">
+          <h3>執行環境</h3>
+          <div class="value" id="env-name">-</div>
+        </div>
+        <div class="info-card">
+          <h3>Script ID</h3>
+          <div class="value">1qjktDYKVUO8_yZnMBN12QKUgyKqlEyvmIl5C1Yn05tDyPOFKgJRr-bCT</div>
+        </div>
+        <div class="info-card">
+          <h3>目前時間</h3>
+          <div class="value" id="current-time">-</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="checkBackendStatus()">測試後端連線 (getAppStatus)</button>
+      </div>
+    </section>
+    <section class="hero-card">
+      <h3 style="margin-bottom: 0.75rem;">系統執行紀錄 / 回應輸出</h3>
+      <div id="output" class="console-box">等待操作中...</div>
+    </section>
+  </main>
+  <footer>6L-Appscript-test - Powered by google-apps-script-dev Skill (v0.2)</footer>
+  <script>
+    const isGasEnv = typeof google !== 'undefined' && google.script && google.script.run;
+    function initPage() {
+      const badge = document.getElementById('env-badge');
+      const envName = document.getElementById('env-name');
+      document.getElementById('current-time').textContent = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+      if (isGasEnv) {
+        badge.textContent = 'Google Apps Script 雲端環境';
+        badge.className = 'badge badge-gas';
+        envName.textContent = 'GAS HtmlService (V8 Runtime)';
+        logOutput('[初始化] 已連線至 Google Apps Script 雲端執行環境。');
+      } else {
+        badge.textContent = 'Local 本地端開發環境';
+        badge.className = 'badge badge-local';
+        envName.textContent = 'Local Dev Server (' + window.location.origin + ')';
+        logOutput('[初始化] 目前執行於本地端開發環境 (Port 3030)，google.script.run 將使用本地模擬回應。');
+      }
+    }
+    function logOutput(message) {
+      const timestamp = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+      document.getElementById('output').textContent = `[${timestamp}] ${message}`;
+    }
+    function checkBackendStatus() {
+      logOutput('正在呼叫後端 getAppStatus()...');
+      if (isGasEnv) {
+        google.script.run
+          .withSuccessHandler(function(res) { logOutput('雲端後端回應成功：\n' + JSON.stringify(res, null, 2)); })
+          .withFailureHandler(function(err) { logOutput('呼叫失敗：' + err.message); })
+          .getAppStatus();
+      } else {
+        setTimeout(function() {
+          logOutput('本地端模擬回應 (getAppStatus)：\n' + JSON.stringify({
+            status: 'ok',
+            project: '6L-Appscript-test',
+            mode: 'local-dev',
+            port: 3030,
+            timeZone: 'Asia/Taipei',
+            timestamp: new Date().toISOString()
+          }, null, 2));
+        }, 200);
+      }
+    }
+    window.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

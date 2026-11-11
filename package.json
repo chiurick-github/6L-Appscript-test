@@ -1,0 +1,26 @@
+{
+  "name": "6L-Appscript-test",
+  "version": "1.0.0",
+  "description": "Google Apps Script local development environment",
+  "private": true,
+  "scripts": {
+    "dev": "node dev-server.js",
+    "dev:sa": "node dev-server.js --mode sa",
+    "dev:oauth": "node dev-server.js --mode oauth",
+    "test:datastore": "python3 test_datastore.py",
+    "test:datastore:sa": "python3 test_datastore.py --mode sa",
+    "test:datastore:oauth": "python3 test_datastore.py --mode oauth",
+    "setup:github": "node setup-github.js",
+    "login": "clasp -A .clasprc.json login",
+    "pull": "clasp -A .clasprc.json -P .clasp.json pull",
+    "push": "clasp -A .clasprc.json -P .clasp.json -I .claspignore push",
+    "deploy": "clasp -A .clasprc.json -P .clasp.json deploy",
+    "deployments": "clasp -A .clasprc.json -P .clasp.json deployments",
+    "status": "clasp -A .clasprc.json -P .clasp.json -I .claspignore status",
+    "open": "clasp -A .clasprc.json -P .clasp.json open"
+  },
+  "devDependencies": {
+    "@google/clasp": "^2.4.2",
+    "@types/google-apps-script": "^1.0.83"
+  }
+}

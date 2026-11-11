@@ -1,0 +1,17 @@
+# Node.js 套件與系統暫存
+node_modules/
+.DS_Store
+
+# Google Apps Script OAuth 登入憑證 (嚴禁上傳)
+.clasprc.json
+
+# GCP Service Account 私鑰、憑證與本地機敏參數 (嚴禁上傳)
+secrets.local.json
+*service-account*.json
+*credentials*.json
+*secret*.json
+*.pem
+*.key
+*.p12
+.env
+.env.*
